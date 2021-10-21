@@ -1,9 +1,8 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 import csv
 import sys
 import codecs
 import re
-import sqlite3
 
 
 def eval_expression(input_string, first, second):
@@ -57,6 +56,14 @@ def parsing_inequalities(func):
         old_expression = new_expression = expression_without_inequality[1]
     else:
         raise RuntimeError("Error parsing")
+
+    print(expression)
+    for i in range(len(expression)):
+        if expression[i].find("(") != -1:
+            expression[i] = expression[i].replace("(", "")
+        elif expression[i].find(")") != -1:
+            expression[i] = expression[i].replace(")", "")
+    print(expression)
     for i in expression:
         if new_expression.find(i) != -1:
             if i.find("y.") != -1:
@@ -70,15 +77,6 @@ def parsing_inequalities(func):
 
 x = 400
 y = 100
-fun = parsing_inequalities("y.t*y.t+y.t-x.heat_Q>=450")
+fun = parsing_inequalities("y.t*(y.t+y.t)-x.heat_Q>=450")
 print(eval_expression(fun, x, y))
 
-tmp = []
-with open("test.txt") as f:
-    for line in f:
-        tmp.append(line)
-tmp = [line.rstrip() for line in tmp]
-result = []
-for i in tmp:
-    result.append(eval_expression(parsing_inequalities(i), x, y))
-print(result)
